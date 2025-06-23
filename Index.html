@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <style>
+      body { font-family: Arial, sans-serif; padding: 20px; }
+      .status { margin-top: 10px; color: green; }
+    </style>
+  </head>
+  <body>
+    <h2>Загрузка Excel-файла</h2>
+    <input type="file" id="fileInput" accept=".xlsx" />
+    <button onclick="uploadFile()">Загрузить и проверить</button>
+    <div class="status" id="status"></div>
+    <script>
+      function uploadFile() {
+        const file = document.getElementById('fileInput').files[0];
+        if (!file) return alert("Выберите файл");
+        document.getElementById("status").innerText = "🔄 Загрузка...";
+        const fr = new FileReader();
+        fr.onload = function(e) {
+          google.script.run.withSuccessHandler(function(res) {
+            document.getElementById("status").innerText = res;
+          }).processExcelFile(e.target.result);
+        };
+        fr.readAsDataURL(file);
+      }
+    </script>
+  </body>
+</html>
